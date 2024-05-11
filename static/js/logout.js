@@ -1,4 +1,4 @@
-document.getElementById('logoutButton').addEventListener('click', function (event) {
+document.getElementById('logoutButton')?.addEventListener('click', function (event) {
     event.preventDefault();
     fetch('/api/users/logout/', {
         method: 'POST',
