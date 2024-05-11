@@ -1,0 +1,78 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+
+{% block body %}
+    <a type="button" href="{% url 'uavs:category_form' %}">Create Category</a>
+    <table id="categoryTable" class="display" style="width:100%">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th>Actions</th>
+            <th></th>
+        </tr>
+        </thead>
+    </table>
+{% endblock %}
+
+{% block extrascripts %}
+    {{ block.super }}
+
+    <script>
+        $(document).ready(function () {
+            $('#categoryTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/api/category/",
+                    "type": "GET"
+                },
+                "columns": [
+                    {"data": "id"},
+                    {"data": "name"},
+                    {"data": "slug"},
+                    {"data": "created_at"},
+                    {"data": "updated_at"},
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            return '<button type="button" onclick="deleteBrand(' + row.id + ')">Delete</button>';
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            return '<a href="/api/brand/' + row.id + '/">Update</a>';
+                        }
+                    },
+                ],
+
+            });
+        });
+
+        function deleteBrand(id) {
+            fetch('/api/brand/' + id + '/', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                }
+            }).then(response => {
+                if (response.ok) {
+                    alert('Brand deleted successfully');
+                    $('#brandTable').DataTable().ajax.reload();
+                } else {
+                    alert('An error occurred');
+                }
+            });
+        }
+    </script>
+{% endblock %}

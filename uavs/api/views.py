@@ -1,19 +1,22 @@
-from rest_framework.views import APIView
-from .serializers import BrandCreateUpdateSerializer, BrandListSerializer
-from uavs.models import Brand, create_slug
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from .serializers import BrandSerializer, CategorySerializer
+from uavs.models import Brand, create_slug, Category
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 
 
 class BrandViewSet(viewsets.ViewSet):
     """
-    list:
-        Returns list of all existing brands
+    A simple ViewSet for viewing, adding, and deleting brands.
+
+    This ViewSet provides `list`, `create`, and `destroy` actions.
     """
 
     def post(self, request, *args, **kwargs):
-        serializer = BrandCreateUpdateSerializer(data=request.data)
+        data = {
+            "name": request.data.get("name"),
+            "slug": create_slug(request.data.get("name"))
+        }
+        serializer = BrandSerializer(data=data)
         if serializer.is_valid():
             slug = create_slug(request.data.get("name"))
             serializer.save(name=request.data.get("name"), slug=slug)
@@ -32,7 +35,7 @@ class BrandViewSet(viewsets.ViewSet):
 
         total = query.count()
         query = query[start:start + length]
-        serializer = BrandListSerializer(query, many=True)
+        serializer = BrandSerializer(query, many=True)
         return Response({
             "draw": draw,
             "recordsTotal": total,
@@ -49,17 +52,49 @@ class BrandViewSet(viewsets.ViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class ListBrandAPIView(APIView):
+class CategoryViewSet(viewsets.ViewSet):
     """
-    get:
-        Returns list of all existing brands
+    A simple ViewSet for viewing, adding, and deleting categories.
+
+    This ViewSet provides `list`, `create`, and `destroy` actions.
     """
 
-    queryset = Brand.objects.all()
-    serializer_class = BrandCreateUpdateSerializer
-    permission_classes = [AllowAny]
+    def post(self, request, *args, **kwargs):
+        data = {
+            "name": request.data.get("name"),
+            "slug": create_slug(request.data.get("name"))
+        }
+        serializer = CategorySerializer(data=data)
+        if serializer.is_valid():
+            slug = create_slug(request.data.get("name"))
+            serializer.save(name=request.data.get("name"), slug=slug)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, *args, **kwargs):
-        brands = Brand.objects.all()
-        serializer = BrandCreateUpdateSerializer(brands, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def list(self, request):
+        draw = int(request.GET.get('draw', 1))
+        start = int(request.GET.get('start', 0))
+        length = int(request.GET.get('length', 10))
+        search_value = request.GET.get('search[value]', '')
+
+        query = Category.objects.all()
+        if search_value:
+            query = query.filter(name__icontains=search_value)
+
+        total = query.count()
+        query = query[start:start + length]
+        serializer = CategorySerializer(query, many=True)
+        return Response({
+            "draw": draw,
+            "recordsTotal": total,
+            "recordsFiltered": total,
+            "data": serializer.data
+        })
+
+    def destroy(self, request, *args, **pk):
+        try:
+            category = Category.objects.get(pk=int(pk['pk']))
+            category.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Category.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

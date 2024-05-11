@@ -18,3 +18,10 @@ def brand_form(request):
 @user_passes_test(superuser_check)
 def brand_list(request):
     return render(request, 'dashboard/brand/list.html')
+
+
+def category_form(request):
+    return render(request, 'dashboard/category/form.html')
+
+def category_list(request):
+    return render(request, 'dashboard/category/list.html')

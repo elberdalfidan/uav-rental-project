@@ -1,12 +1,12 @@
 from django.urls import path
-from .views import BrandViewSet
+from .views import BrandViewSet, CategoryViewSet
 from rest_framework.routers import DefaultRouter
 from django.urls import include
 
 router = DefaultRouter()
 router.register(r'brand', BrandViewSet, basename='brand')
+router.register(r'category', CategoryViewSet, basename='category')
 
 urlpatterns = [
-    # path("brand/list/", BrandViewSet.as_view({'get': 'list', 'delete': 'destroy'}), name="brand_list"),
     path('', include(router.urls)),
 ]
