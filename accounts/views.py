@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 
 
 def home(request):
-    return render(request, 'accounts/home.html')
+    return render(request, 'reservation/form.html')
 
 
 def login(request):

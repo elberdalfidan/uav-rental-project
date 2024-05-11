@@ -1,0 +1,56 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+
+{% block body %}
+    <a type="button" href="{% url 'uavs:brand_form' %}">Create Brand</a>
+    <table id="reservationsTable" class="display" style="width: 100%">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>UAV</th>
+            <th>User</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+        </thead>
+
+    </table>
+{% endblock %}
+
+{% block extrascripts %}
+    {{ block.super }}
+
+    <script>
+        $(document).ready(function () {
+            console.log('ready datatable')
+            $('#reservationsTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/api/reservation/",
+                    "type": "GET",
+                },
+                "columns": [
+                    {"data": "id"},
+                    {
+                        "data": "uav.image",
+                        "render": function (data, type, row) {
+                            return '<img src="' + data + '" width="50" height="50">';
+                        }
+                    },
+                    {"data": "uav.name"},
+                    {"data": "user.username"},
+                    {"data": "start_date"},
+                    {"data": "end_date"},
+                ]
+
+            })
+        })
+    </script>
+{% endblock %}

@@ -168,6 +168,8 @@ class ReservationViewSet(viewsets.ModelViewSet):
     serializer_class = ReservationSerializer
 
     def create(self, request, *args, **kwargs):
+        if request.user.is_authenticated is False:
+            return Response({'error': 'User is not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
         data = {
             "uav": request.data.get("uav"),
             "user": request.user.id,
