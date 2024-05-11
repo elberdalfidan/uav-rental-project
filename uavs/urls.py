@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import brand_form, brand_list, category_form, category_list
+from .views import brand_form, brand_list, category_form, category_list, uav_form, uav_list
 
 app_name = "uavs"
 
@@ -10,4 +10,7 @@ urlpatterns = [
 
     path('dashboard/category/create/', category_form, name='category_form'),
     path('dashboard/category/list/', category_list, name='category_list'),
+
+    path('dashboard/uav/create/', uav_form, name='uav_form'),
+    path('dashboard/uav/list/', uav_list, name='uav_list'),
 ]

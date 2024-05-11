@@ -28,6 +28,17 @@ class Category(models.Model):
         ordering = ["-created_at", "-updated_at"]
 
 
+class Uav(models.Model):
+    name = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+    weight = models.FloatField()
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="uavs/")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 def create_slug(slug, new_slug=None):
     slug = slugify(slug)
     if new_slug is not None:

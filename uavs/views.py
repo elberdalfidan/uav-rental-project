@@ -23,5 +23,14 @@ def brand_list(request):
 def category_form(request):
     return render(request, 'dashboard/category/form.html')
 
+
 def category_list(request):
     return render(request, 'dashboard/category/list.html')
+
+
+def uav_form(request):
+    return render(request, 'dashboard/uav/form.html')
+
+
+def uav_list(request):
+    return render(request, 'dashboard/uav/list.html')
