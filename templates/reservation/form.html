@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+
+{% block body %}
+    <h1>UAV Reservation System</h1>
+
+    <!-- Reservation Form -->
+    <h2>Make a Reservation</h2>
+    <form id="reservationForm">
+        <div>
+            <label for="uav" class="block text-sm font-medium text-gray-700">UAV</label>
+            <select id="uav" name="uav"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required></select>
+        </div>
+
+        <div>
+            <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
+            <input type="date" id="start_date" name="start_date"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   required>
+        </div>
+
+        <div>
+            <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
+            <input type="date" id="end_date" name="end_date"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   required>
+        </div>
+
+        <button type="submit"
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Kaydet
+        </button>
+    </form>
+
+    <h2>Current Reservations</h2>
+    <table id="reservationsTable" class="display" style="width: 100%">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>UAV</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+        </thead>
+
+    </table>
+{% endblock %}
+
+{% block extrascripts %}
+    {{ block.super }}
+    <script src="{% static 'js/uav-reservation.js' %}"></script>
+{% endblock %}

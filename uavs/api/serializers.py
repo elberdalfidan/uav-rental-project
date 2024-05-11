@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from uavs.models import Brand, Category, Uav
+from uavs.models import Brand, Category, Uav, Reservation
 
 
 class BrandSerializer(serializers.ModelSerializer):
@@ -17,6 +17,15 @@ class CategorySerializer(serializers.ModelSerializer):
 class UavSerializer(serializers.ModelSerializer):
     brand = BrandSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
+
     class Meta:
         model = Uav
+        fields = '__all__'
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+    uav = UavSerializer(read_only=True)
+
+    class Meta:
+        model = Reservation
         fields = '__all__'

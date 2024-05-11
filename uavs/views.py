@@ -34,3 +34,7 @@ def uav_form(request):
 
 def uav_list(request):
     return render(request, 'dashboard/uav/list.html')
+
+
+def reservation_form(request):
+    return render(request, 'reservation/form.html')
