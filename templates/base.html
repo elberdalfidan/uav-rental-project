@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} UAV RENTAL PROJECT {% endblock %}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+</head>
+<body>
+{% include 'nav.html' %}
+<section class="bg-gray-200 h-screen {% block extrasectionclass %} {% endblock %}">
+    {% block body %}
+        <h1 class="text-3xl font-bold underline">
+            Hello world!
+        </h1>
+    {% endblock %}
+</section>
+
+
+
+{% block extrascripts %}
+    <script>
+        console.log('Hello from base.html');
+        const csrfToken = '{{ csrf_token }}';
+    </script>
+    <script src="{% static 'js/logout.js' %}"></script>
+{% endblock %}
+</body>
+</html>
