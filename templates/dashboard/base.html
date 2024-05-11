@@ -7,23 +7,26 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-
+    {% block extrahead %}
+    {% endblock %}
 </head>
 <body>
 {% include 'dashboard/dashboard_nav.html' %}
 <section class="bg-gray-200 h-screen {% block extrasectionclass %} {% endblock %}">
-    {% block body %}
-        <h1 class="text-3xl font-bold underline">
-            Hello world!
-        </h1>
-    {% endblock %}
+    <div class="p-4 sm:ml-64">
+        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+            {% block body %}
+                Hello world!!
+            {% endblock %}
+        </div>
+    </div>
 </section>
 
 
 
 {% block extrascripts %}
     <script>
-        console.log('Hello from base.html');
+        console.log('Hello from dashboard.html');
         const csrfToken = '{{ csrf_token }}';
     </script>
     <script src="{% static 'js/logout.js' %}"></script>

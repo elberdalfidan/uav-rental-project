@@ -16,3 +16,9 @@ class BrandCreateUpdateSerializer(serializers.ModelSerializer):
         if qs.exists():
             raise serializers.ValidationError("This brand already exists.")
         return value
+
+
+class BrandListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Brand
+        fields = '__all__'
