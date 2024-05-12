@@ -6,7 +6,7 @@ The goal of this project is users to rent UAVs on the project's website
 
 - Users can register and login
 - Users can rent UAVs
-- Users can see their rental history
+- Users can see their rental history and cancel their rentals
 - Admin can add new UAVs
 - Admin can see all the rentals
 - Admin can see all the users
