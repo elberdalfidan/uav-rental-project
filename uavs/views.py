@@ -42,3 +42,7 @@ def reservation_form(request):
 
 def reservation_list(request):
     return render(request, 'dashboard/reservation/list.html')
+
+
+def account_reservation_list(request):
+    return render(request, 'accounts/reservations.html')

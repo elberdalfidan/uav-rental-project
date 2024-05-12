@@ -2,7 +2,6 @@ from .serializers import BrandSerializer, CategorySerializer, UavSerializer, Res
 from uavs.models import Brand, create_slug, Category, Uav, Reservation
 from rest_framework.response import Response
 from rest_framework import status, viewsets
-from django.core.exceptions import ValidationError
 
 
 class BrandViewSet(viewsets.ViewSet):
@@ -10,6 +9,21 @@ class BrandViewSet(viewsets.ViewSet):
     A simple ViewSet for viewing, adding, and deleting brands.
 
     This ViewSet provides `list`, `create`, and `destroy` actions.
+    create:
+        Create a new brand.
+        parameters:
+            name: str
+    list:
+        Return a list of all the existing brands.
+        parameters:
+            draw: int
+            start: int
+            length: int
+            search[value]: str
+    destroy:
+        Delete a brand.
+        parameters:
+            pk: int
     """
 
     def post(self, request, *args, **kwargs):
@@ -58,6 +72,21 @@ class CategoryViewSet(viewsets.ViewSet):
     A simple ViewSet for viewing, adding, and deleting categories.
 
     This ViewSet provides `list`, `create`, and `destroy` actions.
+    create:
+        Create a new category.
+        parameters:
+            name: str
+    list:
+        Return a list of all the existing categories.
+        parameters:
+            draw: int
+            start: int
+            length: int
+            search[value]: str
+    destroy:
+        Delete a category.
+        parameters:
+            pk: int
     """
 
     def post(self, request, *args, **kwargs):
@@ -107,6 +136,26 @@ class UavViewSet(viewsets.ViewSet):
     A simple ViewSet for viewing, adding, and deleting UAVs.
 
     This ViewSet provides `list`, `create`, and `destroy` actions.
+    create:
+        Create a new UAV.
+        parameters:
+            name: str
+            model: str
+            weight: float
+            brand: int
+            category: int
+            image: file
+    list:
+        Return a list of all the existing UAVs.
+        parameters:
+            draw: int
+            start: int
+            length: int
+            search[value]: str
+    destroy:
+        Delete a UAV.
+        parameters:
+            pk: int
     """
 
     def post(self, request, *args, **kwargs):
@@ -163,6 +212,21 @@ class UavViewSet(viewsets.ViewSet):
 class ReservationViewSet(viewsets.ModelViewSet):
     """
     A simple ViewSet for viewing, adding, updating, and deleting reservations.
+
+    list:
+        Return a list of all the existing reservations.
+        parameters:
+            draw: int
+            start: int
+            length: int
+            search[value]: str
+            user_id: int
+    create:
+        Create a new reservation.
+        parameters:
+            uav: int
+            start_date: date
+            end_date: date
     """
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
@@ -196,8 +260,12 @@ class ReservationViewSet(viewsets.ModelViewSet):
         start = int(request.GET.get('start', 0))
         length = int(request.GET.get('length', 10))
         search_value = request.GET.get('search[value]', '')
+        user_id = request.GET.get('user_id', None)
 
         query = Reservation.objects.all()
+
+        if user_id:
+            query = query.filter(user=user_id)
         if search_value:
             query = query.filter(uav__name__icontains=search_value)
 
@@ -210,3 +278,11 @@ class ReservationViewSet(viewsets.ModelViewSet):
             "recordsFiltered": total,
             "data": serializer.data
         })
+
+    def destroy(self, request, *args, **pk):
+        try:
+            reservation = Reservation.objects.get(pk=int(pk['pk']), user=request.user)
+            reservation.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Reservation.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
